@@ -1,0 +1,447 @@
+########################################################################
+# GIT + GITHUB ACTIONS — COMPLETE MASTERY FILE (Hinglish comments)
+# --------------------------------------------------------------------
+# Ye ek hi file hai jisme:
+#   PART 1 -> GIT ke saare important commands/concepts (comments mein,
+#             kyunki Git khud YAML nahi hota — but sab yahin cover hai)
+#   PART 2 -> Ek REAL, WORKING GitHub Actions workflow (.yml) jisme
+#             almost har feature use/explain kiya gaya hai.
+#
+# File ko save karke .github/workflows/ folder mein daal sakte ho.
+# Path hona chahiye: .github/workflows/ci-cd.yml
+########################################################################
+
+
+########################################################################
+# PART 1: GIT — COMPLETE COMMAND REFERENCE (comments ke roop mein)
+########################################################################
+
+# ---------- 1. Setup & Config ----------
+# git config --global user.name "Deepanshu"
+# git config --global user.email "you@example.com"
+# git config --global core.editor "vim"
+# git config --list                     # sab config dekhne ke liye
+# git config --global init.defaultBranch main
+
+# ---------- 2. Repo banana / lena ----------
+# git init                              # naya local repo
+# git clone <url>                       # existing repo copy karna
+# git clone <url> --branch dev          # specific branch clone
+# git clone --depth 1 <url>             # shallow clone (fast, kam history)
+
+# ---------- 3. Basic Workflow (staging -> commit -> push) ----------
+# git status                            # kya changed hai dekho
+# git add <file>                        # ek file stage
+# git add .                             # sab kuch stage
+# git add -p                            # interactively hunks choose karke stage
+# git commit -m "message"               # commit
+# git commit --amend                    # last commit ka message/content edit
+# git push origin main                  # remote pe bhejo
+# git pull origin main                  # remote se lo (fetch + merge)
+# git fetch origin                      # sirf download, merge nahi karta
+
+# ---------- 4. Branching ----------
+# git branch                            # local branches list
+# git branch -a                         # local + remote branches
+# git branch <name>                     # naya branch banao
+# git checkout <name>                   # branch switch karo
+# git checkout -b <name>                # bana ke turant switch
+# git switch <name>                     # naya (safer) switch command
+# git switch -c <name>                  # naya banake switch
+# git branch -d <name>                  # branch delete (safe, merged hona chahiye)
+# git branch -D <name>                  # force delete
+# git push origin --delete <name>       # remote branch delete
+# git branch -m old new                 # branch rename
+
+# ---------- 5. Merging & Rebasing ----------
+# git merge <branch>                    # current branch mein <branch> merge karo
+# git merge --no-ff <branch>            # merge commit force banao (history clean rehti)
+# git rebase <branch>                   # apni commits ko <branch> ke upar replay karo
+# git rebase -i HEAD~3                  # interactive rebase — last 3 commits squash/edit/reorder
+# git rebase --continue                 # conflict resolve karne ke baad continue
+# git rebase --abort                    # rebase cancel karke wapas original state
+#
+# MERGE vs REBASE:
+#   merge -> history mein ek extra "merge commit" aata hai, sach dikhata hai kya hua
+#   rebase -> history linear/clean banti hai, lekin shared branches pe mat karo
+#             (kabhi bhi already-pushed public commits rebase mat karo)
+
+# ---------- 6. Conflict Resolution ----------
+# git status                            # konsi files conflicted hain dekho
+# (file open karo, <<<<<<< ======= >>>>>>> markers manually resolve karo)
+# git add <resolved-file>
+# git commit                            # (merge ke case mein)  OR
+# git rebase --continue                 # (rebase ke case mein)
+# git merge --abort                     # merge cancel karke pehle jaisa
+
+# ---------- 7. Stash (kaam beech mein rok ke switch karna) ----------
+# git stash                             # changes temporarily save karo
+# git stash list                        # sab stashes dekho
+# git stash pop                         # latest stash wapas laga do + list se hata do
+# git stash apply                       # laga do lekin list se mat hatao
+# git stash drop stash@{0}              # specific stash delete
+# git stash push -m "wip login"         # naam ke saath stash
+
+# ---------- 8. History dekhna ----------
+# git log                               # commit history
+# git log --oneline --graph --all       # compact + branch graph (bahut useful)
+# git log -p <file>                     # file ki har commit ka diff
+# git diff                              # unstaged changes
+# git diff --staged                     # staged changes
+# git diff branch1..branch2             # do branches ke beech diff
+# git blame <file>                      # line-by-line kisne edit kiya
+# git show <commit-hash>                # ek commit ka full detail
+
+# ---------- 9. Undo / Reset / Revert ----------
+# git checkout -- <file>                # ek file ke uncommitted changes discard
+# git restore <file>                    # (naya command) same kaam
+# git reset --soft HEAD~1               # last commit hatao, changes staged rahenge
+# git reset --mixed HEAD~1              # (default) changes unstaged ho jayenge
+# git reset --hard HEAD~1               # DANGEROUS: sab kuch discard, changes bhi gaye
+# git revert <commit-hash>              # SAFE: naya commit banake purana undo karta hai
+#                                        # (shared/public branches pe revert use karo, reset nahi)
+
+# ---------- 10. Cherry-pick ----------
+# git cherry-pick <commit-hash>         # ek specific commit ko dusre branch mein le aao
+
+# ---------- 11. Tags (releases ke liye) ----------
+# git tag v1.0.0                        # lightweight tag
+# git tag -a v1.0.0 -m "release msg"    # annotated tag (recommended)
+# git push origin v1.0.0                # ek tag push
+# git push origin --tags                # sab tags push
+# git tag -d v1.0.0                     # local tag delete
+# git push origin --delete v1.0.0       # remote tag delete
+
+# ---------- 12. Remotes ----------
+# git remote -v                         # remotes dekho
+# git remote add origin <url>           # naya remote add
+# git remote set-url origin <new-url>   # remote url change
+# git remote remove origin              # remote hatao
+
+# ---------- 13. .gitignore ----------
+# node_modules/
+# *.log
+# .env
+# __pycache__/
+# dist/
+# (Pattern: file/folder naam likho jo track nahi karna)
+
+# ---------- 14. Git Hooks (automation, local) ----------
+# .git/hooks/pre-commit                 # commit se pehle script chalta hai
+# .git/hooks/pre-push                   # push se pehle script chalta hai
+# (executable banao: chmod +x .git/hooks/pre-commit)
+
+# ---------- 15. Submodules ----------
+# git submodule add <url> path/         # dusra repo andar embed karo
+# git submodule update --init --recursive
+
+# ---------- 16. Useful combos ----------
+# git log --author="Deepanshu"          # ek author ke commits
+# git shortlog -sn                      # kisne kitne commits kiye
+# git clean -fd                         # untracked files/folders delete (careful!)
+# git bisect start                      # binary search karke buggy commit dhundo
+
+
+########################################################################
+# PART 2: GITHUB ACTIONS — COMPLETE WORKING WORKFLOW
+# File location: .github/workflows/ci-cd.yml
+########################################################################
+
+# Workflow ka naam — Actions tab mein yahi dikhega
+name: CI-CD-Complete-Reference
+
+# ---------------------------------------------------------------
+# TRIGGERS (on:) — workflow kab chalega
+# ---------------------------------------------------------------
+on:
+  push:
+    branches: [main, "release/**"]      # in branches pe push hone par
+    paths-ignore:                       # in files ke change pe SKIP karo
+      - "**.md"
+      - "docs/**"
+  pull_request:
+    branches: [main]                    # main pe PR aane par
+
+  schedule:
+    - cron: "0 3 * * *"                 # roz raat 3 baje UTC (cron job)
+
+  workflow_dispatch:                    # manual "Run workflow" button
+    inputs:
+      environment:
+        description: "Deploy environment"
+        required: true
+        default: "staging"
+        type: choice
+        options: [staging, production]
+      debug_enabled:
+        description: "Enable debug logging"
+        required: false
+        type: boolean
+        default: false
+
+  workflow_call:                        # ise dusre workflow se "reusable" ki tarah call kar sakte ho
+    secrets:
+      DEPLOY_TOKEN:
+        required: true
+
+# ---------------------------------------------------------------
+# PERMISSIONS — GITHUB_TOKEN ko kitni access chahiye (least-privilege)
+# ---------------------------------------------------------------
+permissions:
+  contents: read
+  packages: write
+  id-token: write                       # OIDC (cloud login without secrets) ke liye zaroori
+
+# ---------------------------------------------------------------
+# CONCURRENCY — same branch ke purane runs auto-cancel karo
+# ---------------------------------------------------------------
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# ---------------------------------------------------------------
+# GLOBAL ENV VARIABLES — sab jobs/steps mein available
+# ---------------------------------------------------------------
+env:
+  NODE_ENV: production
+  APP_NAME: my-devops-app
+
+# =================================================================
+# JOBS
+# =================================================================
+jobs:
+
+  # -------------------------------------------------------------
+  # JOB 1: BUILD + TEST (matrix strategy ke saath — multiple versions)
+  # -------------------------------------------------------------
+  build-and-test:
+    runs-on: ubuntu-latest              # GitHub-hosted runner
+    timeout-minutes: 15                 # itni der mein khatam na ho to fail kar do
+    continue-on-error: false
+
+    strategy:
+      fail-fast: false                  # ek combination fail ho to baaki mat roko
+      matrix:
+        node-version: [18, 20]          # 2 x 2 = 4 combinations chalenge
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      # actions/checkout — repo code runner pe laata hai
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0                 # full git history (tags/blame ke liye)
+
+      # ready-made action use karna
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"                   # dependency caching built-in
+
+      # MANUAL CACHING example (jab built-in cache option na ho)
+      - name: Cache node_modules manually
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      # STEP OUTPUTS — ek step ka data dusre step/job ko dena
+      - name: Set build version
+        id: version_step
+        run: echo "version=1.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      # Conditional step — sirf ek OS pe run karo
+      - name: Upload coverage (ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ matrix.node-version }}
+          path: coverage/
+          retention-days: 5
+
+    # JOB-LEVEL OUTPUTS — dusre jobs ke liye expose karo
+    outputs:
+      app_version: ${{ steps.version_step.outputs.version }}
+
+  # -------------------------------------------------------------
+  # JOB 2: DOCKER BUILD (container job + service container example)
+  # -------------------------------------------------------------
+  docker-build:
+    needs: build-and-test               # pehle wala job pass hona chahiye
+    runs-on: ubuntu-latest
+
+    # SERVICE CONTAINER — job ke sath ek helper container (jaise DB) chalta hai
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: testpass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}     # SECRETS — repo settings mein set hote hain
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            deestar08/${{ env.APP_NAME }}:${{ needs.build-and-test.outputs.app_version }}
+            deestar08/${{ env.APP_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # SonarCloud + Trivy jaise scans (common pattern)
+      - name: Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: deestar08/${{ env.APP_NAME }}:latest
+          format: table
+          exit-code: "1"                # HIGH/CRITICAL milne pe pipeline fail
+          severity: CRITICAL,HIGH
+
+  # -------------------------------------------------------------
+  # JOB 3: DEPLOY (Environments + Approval Gate + OIDC cloud login)
+  # -------------------------------------------------------------
+  deploy:
+    needs: [build-and-test, docker-build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    # ENVIRONMENT — isse manual approval gate lagta hai (Settings > Environments)
+    environment:
+      name: ${{ github.event.inputs.environment || 'staging' }}
+      url: https://myapp.example.com
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # OIDC — bina long-lived secret ke cloud (Azure/AWS/GCP) mein login
+      - name: Azure Login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report-20
+
+      - name: Deploy step
+        run: |
+          echo "Deploying version ${{ needs.build-and-test.outputs.app_version }}"
+          echo "Target environment: ${{ github.event.inputs.environment || 'staging' }}"
+          # yahan actual deploy command aayega (kubectl/helm/az cli/etc.)
+
+      # RETRY LOGIC pattern (manual, kyunki GH Actions mein native retry nahi hai)
+      - name: Health check with retry
+        run: |
+          for i in 1 2 3; do
+            curl -sf https://myapp.example.com/health && break
+            echo "Attempt $i failed, retrying in 10s..."
+            sleep 10
+          done
+
+  # -------------------------------------------------------------
+  # JOB 4: NOTIFY (always run, chahe pehle jobs pass/fail ho)
+  # -------------------------------------------------------------
+  notify:
+    needs: [build-and-test, docker-build, deploy]
+    if: always()                        # is job ko har condition mein chalao
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report status
+        run: |
+          echo "Build result: ${{ needs.build-and-test.result }}"
+          echo "Docker result: ${{ needs.docker-build.result }}"
+          echo "Deploy result: ${{ needs.deploy.result }}"
+
+
+########################################################################
+# BONUS: REUSABLE WORKFLOW (dusri file, .github/workflows/reusable-test.yml
+# mein rakho — yahan reference ke liye example diya gaya hai)
+########################################################################
+# on:
+#   workflow_call:
+#     inputs:
+#       node-version:
+#         required: true
+#         type: string
+#     secrets:
+#       NPM_TOKEN:
+#         required: true
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: ${{ inputs.node-version }}
+#       - run: npm test
+
+# CALL KARNE KA TARIKA (dusre workflow se):
+# jobs:
+#   call-reusable:
+#     uses: ./.github/workflows/reusable-test.yml
+#     with:
+#       node-version: "20"
+#     secrets:
+#       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+
+########################################################################
+# BONUS: COMPOSITE ACTION (multiple steps ko ek reusable "action" banana)
+# File: .github/actions/setup-project/action.yml
+########################################################################
+# name: "Setup Project"
+# description: "Checkout + install deps in one step"
+# runs:
+#   using: "composite"
+#   steps:
+#     - uses: actions/checkout@v4
+#     - run: npm ci
+#       shell: bash
+
+# CALL KARNE KA TARIKA:
+# steps:
+#   - uses: ./.github/actions/setup-project
+
+
+########################################################################
+# QUICK CHEATSHEET — CONTEXTS & EXPRESSIONS
+########################################################################
+# ${{ github.ref }}          -> refs/heads/main
+# ${{ github.sha }}          -> commit hash
+# ${{ github.actor }}        -> workflow trigger karne wala user
+# ${{ github.event_name }}   -> push / pull_request / workflow_dispatch
+# ${{ runner.os }}           -> Linux / Windows / macOS
+# ${{ secrets.NAME }}        -> repo/org secrets
+# ${{ vars.NAME }}           -> repo/org variables (non-secret)
+# ${{ needs.<job>.outputs.x }} -> dusre job ka output
+# ${{ steps.<id>.outputs.x }}  -> dusre step ka output
+# success() / failure() / always() / cancelled()  -> job/step conditions
