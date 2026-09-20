@@ -1,0 +1,13 @@
+
+name: My First Workflow # Workflow ka naam (Actions tab mein dikhta hai)
+on: push # Trigger: jab bhi koi push ho
+jobs:    #  workflow build jobs ,  test job , scan jobs , deploy jobs
+  hello-job: # Job ka unique ID
+    runs-on: ubuntu-latest # Runner OS
+    steps:
+      - name: Say Hello
+        run: echo "Hello from GitHub Actions!"
+      - name: Checkout code
+        uses: actions/checkout@v4 # Marketplace action use karna
+      - name: List files
+        run: ls -la
