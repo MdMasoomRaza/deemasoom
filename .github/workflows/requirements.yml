@@ -1,4 +1,5 @@
-yaml
+name: My 2nd Workflow # Workflow ka naam (Actions tab mein dikhta hai)
+on: push # Trigger: jab bhi koi push ho
 
 jobs:
   build:
