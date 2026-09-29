@@ -1,0 +1,48 @@
+name: Python CI/CD Pipeline   # deepanshu webwerks mein kam krta server admin ka
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:        # unique name 
+    runs-on: ubuntu-latest     # ubutunu machin mein run karega
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4      ### checkout@v4    git clone https://     -->  ubuntu machine (deemasoom) saree conteint
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5       ### 3.11 install us ubuuntu machine 
+      with:
+        python-version: "3.11"
+        cache: "pip"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt        ### pip ke thorughhh modules install kar raha haaii## 
+        pip install build
+
+    - name: Lint Code with Flake8      ## ignore   karr aabhi syntax tab uscase mein hota haai 
+      run: |
+        # Stop build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Run Unit Tests with Pytest  # pytest
+      run: |
+        pytest -v
+
+    - name: Build Application Package      # python -m build 
+      run: |
+        python -m build
+
+    - name: Upload Build Artifacts             ### massom.xyz   dist/ url content download yaa future ci/cd pipeline use kr sktaa haai
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package
+        path: dist/
