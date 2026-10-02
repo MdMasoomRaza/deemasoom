@@ -1,4 +1,4 @@
-name: Python CI/CD Pipeline   # deepanshu webwerks mein kam krta server admin ka
+name: Python CI/CD Pipeline Check the artifact  # deepanshu webwerks mein kam krta server admin ka
 
 on:
   push:
