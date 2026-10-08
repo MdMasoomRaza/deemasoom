@@ -7,13 +7,13 @@ on:
 jobs:
   job_once_CI:
     name: Build and Test
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout respository
         uses: actions/checkout@v4
       
       - name: Run test steps
-        run: echo"Runnig tests for CI..."
+        run: echo "Runnig tests for CI..."
   jobs_two_CD:
     name: Deployement for application
     needs: job_once_CI
