@@ -7,7 +7,7 @@ on:
 jobs:
   job_once_CI:
     name: Build and Test
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout respository
         uses: actions/checkout@v4
