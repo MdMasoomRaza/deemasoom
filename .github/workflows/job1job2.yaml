@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download dee artificats files from build-dee-artificat
-        uses: actions/download-artifcat@v4
+        uses: actions/download-artifact@v4
         with:
           name: dee-build-files
           path: downloaded-dist/
