@@ -15,7 +15,7 @@ jobs:
       - name: Run test steps
         run: echo"Runnig tests for CI..."
   jobs_two_CD:
-    name: Deployement for application:
+    name: Deployement for application
     needs: job_once_CI
     runs-on: ubuntu-latest
     steps:
