@@ -14,7 +14,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dee-build-files
-          path: dist/
+          path: dee/
   deploy-dee-artificats:
     needs: build-dee-artificat
     runs-on: ubuntu-latest
