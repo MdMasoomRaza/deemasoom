@@ -1,0 +1,29 @@
+name: Mrko artificats chahiye job1 se toh fir job2 mein use kar saku
+on: [push]
+
+jobs:
+  build-dee-artificat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  ## git clone repor url  --> filess saree git repo file utha ke vm mein laa dega jese tere llocal system pe
+      - name: create dee build uska out 
+        run: |
+          mkdir dee
+          echo "Hello dee artifcats ka content hai ye jo mein a simple file mein use kr raha hu" > dee/app.txt
+      - name: Upload dee artificats
+        uses: actions/upload-artifacts@v4
+        with:
+          name: dee-build-files
+          path: dist/
+  deploy-dee-artificats:
+    needs: build-dee-artificat
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dee artificats files from build-dee-artificat
+        uses: actions/download-artifcats@v4
+        with:
+          name: dee-build-files
+          path: downloaded-dist/
+      - name: Read the build file from build-dee-artificat 
+        run: cat downloaded-dist/app.txt
+
