@@ -1,24 +1,17 @@
-name: Deploy Application
+name: Hello Deepanshu Workflow
 
-# Trigger the workflow when code is pushed to main
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
-
+env:
+  USER_NAME: "Massom" # Global Env Variable
 
 jobs:
-  deploy:
+  say-hello:
     runs-on: ubuntu-latest
-
-    environment: production
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Show environment
-        run: echo "Deploying to $APP_ENV"
-        env:
-          APP_ENV: masoom
+      - name: Print Hello Message
+        run: echo "Hello $USER_NAME!"
