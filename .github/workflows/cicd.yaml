@@ -1,4 +1,10 @@
+name: Deploy Application
 
+# Trigger the workflow when code is pushed to main
+on:
+  push:
+    branches:
+      - main
 
 
 
