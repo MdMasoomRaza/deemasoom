@@ -1,0 +1,33 @@
+name: Basic Multi-Env Pipeline
+
+on:
+  push:
+    branches: [ dev, uat, main ]
+
+jobs:
+  # 1. Dev Deployment Job
+  dev-deploy:
+    if: github.ref_name == 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to DEV
+        run: echo "Hello! Ye DEV environment deployment hai."
+
+  # 2. UAT Deployment Job
+  uat-deploy:
+    if: github.ref_name == 'uat'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to UAT
+        run: echo "Hello! Ye UAT environment deployment hai."
+
+  # 3. Prod Deployment Job
+  prod-deploy:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to PROD
+        run: echo "Hello! Ye PRODUCTION environment deployment hai."
