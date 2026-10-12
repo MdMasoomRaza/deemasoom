@@ -5,3 +5,4 @@ this is for pull request from local to github
 this is good as of now, please chekc once again
 this is for new updated for you mr masoom
 yes checked it, working fine for now
+thsi is two time change for git pull command
