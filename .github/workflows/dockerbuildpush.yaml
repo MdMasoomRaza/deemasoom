@@ -1,0 +1,29 @@
+name: build and push krke docker hub mein bheej denge
+
+on:
+  push:
+    branches:
+      - dev
+      - uat
+      - main
+
+jobs:
+  docker-build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: Login krna hai docker hub mein jis se hum ne dcoker user or pat method use kara h iske liye
+        uses: actions/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and Push docker images as per the stages like uat, dev & prod
+        uses: docker/build-push-action@v5
+        with: 
+          context: .
+          push: true
+          tags: |
+            masoom19/deemasoom:${{ github.ref_name }}
+            masoom19/deemasoom:latest
