@@ -1,0 +1,9 @@
+pytest>=7.0.0
+## directory 
+## for testing with new barnch
+##branch for masoom_uat
+## manish tgesting 
+
+flake8>=6.0.0
+
+# This is modules on feaute branch with test
