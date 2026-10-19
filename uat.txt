@@ -2,3 +2,4 @@
 uat enviroment
 this is new changes for pr under the uat env.`"wq!
 
+hey Prity this is new changes for uat branch to check push and raise pr from uat to main or other branches 
