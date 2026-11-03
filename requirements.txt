@@ -1,1 +1,8 @@
-# This is module file oey
+
+
+requests==2.32.4
+Flask==3.1.1
+pandas==2.3.0
+numpy==2.2.6
+pytest==8.4.1
+

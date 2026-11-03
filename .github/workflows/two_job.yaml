@@ -1,0 +1,61 @@
+
+
+
+name: Python Two Jobs CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Install and Validate Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install requirements
+        run: python -m pip install -r requirements.txt
+
+      - name: Validate dependencies
+        run: python -m pip check
+
+      - name: Show installed packages
+        run: python -m pip list
+
+  job2:
+    name: Test Python Imports
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install requirements
+        run: python -m pip install -r requirements.txt
+
+      - name: Test imports
+        run: |
+          python -c "import requests; print('Requests OK')"
+          python -c "import flask; print('Flask OK')"
+          python -c "import pandas; print('Pandas OK')"
+          python -c "import numpy; print('NumPy OK')"
+          python -m pytest --version
+
